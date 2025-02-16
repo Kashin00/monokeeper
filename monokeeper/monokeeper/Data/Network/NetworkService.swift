@@ -9,11 +9,7 @@ import Foundation
 
 actor NetworkService: Networkable {
 
-    private let session: URLSession
-    
-    private init(session: URLSession = .shared) {
-        self.session = session
-    }
+    private let session = URLSession.shared
     
     private func buildRequest(for request: NetworkRequest) throws(NetworkError) -> URLRequest {
         guard let url = URL(string: request.domain + request.path) else {

@@ -43,7 +43,7 @@ extension NetworkRequest {
     var headers: [String: String] {
         switch self {
         case .userInfo:
-            ["X-Token": ""]
+            ["X-Token": "uW3Ncl6btBTNmKh6coVIgiaNcF5zy5rswSJt_iNjE4FQ"]
         }
     }
 }
