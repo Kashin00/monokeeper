@@ -17,7 +17,7 @@ class CashFlowViewModel: @unchecked Sendable {
         self.dependencies = dependencies
     }
     
-    var state: State = .notAvailable
+    var state: State = .loading
     
     func onAppear() async {
         await authORFetch()

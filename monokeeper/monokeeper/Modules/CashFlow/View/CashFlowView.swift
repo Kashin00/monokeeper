@@ -33,6 +33,9 @@ struct CashFlowView: View {
                     vm.processToken($0)
                 }
                 .padding(20)
+                
+            case .loading:
+                ProgressView()
             }
         }
         .task {
