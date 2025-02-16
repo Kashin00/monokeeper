@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var cashFlowVM = CashFlowViewModel()
+    @State private var cashFlowVM = CashFlowViewModel(dependencies: CaseFlowDependencyContainer())
     @State private var profileVM = ProfileViewModel()
         
     var body: some View {

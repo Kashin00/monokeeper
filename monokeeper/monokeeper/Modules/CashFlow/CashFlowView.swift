@@ -14,10 +14,22 @@ struct CashFlowView: View {
     
     var body: some View {
         VStack {
-            
+            switch vm.state {
+            case .available(let transactions):
+                ScrollView {
+                    ForEach(transactions, id: \.transaction.id) {
+                        Text($0.transaction.description)
+                    }
+                }
+            case .failed:
+                Text("Failed to load data")
+                
+            case .notAvailable:
+                Text("Not available. Please make authorization")
+            }
         }
-        .onAppear {
-            vm.onAppear()
+        .task {
+            await vm.onAppear()
         }
     }
 }
