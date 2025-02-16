@@ -20,10 +20,10 @@ class CashFlowViewModel: @unchecked Sendable {
     var state: State = .notAvailable
     
     func onAppear() async {
-        await resolveAuthFlow()
+        await authORFetch()
     }
     
-    private func resolveAuthFlow() async {
+    private func authORFetch() async {
         switch await dependencies.authService.check() {
         case true:
             await loadTransactions()
