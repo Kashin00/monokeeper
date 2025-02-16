@@ -8,14 +8,22 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    let userService: UserService
+    
+    @State private var cashFlowVM: CashFlowViewModel
+    @State private var profileVM: ProfileViewModel
+    
+    init() {
+        userService = UserService()
+        cashFlowVM = CashFlowViewModel(dependencies: CaseFlowDependencyContainer(transactionManager: TransactionManager(userService: userService), userService: userService))
+        profileVM = ProfileViewModel()
+    }
+        
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        TabContainerView()
+            .environment(cashFlowVM)
+            .environment(profileVM)
     }
 }
 

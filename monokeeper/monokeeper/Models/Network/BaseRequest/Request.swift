@@ -13,7 +13,8 @@ enum NetworkRequest {
         case post = "POST"
     }
     
-    case userInfo
+    case userInfo(UserInfoRequest)
+    case transactions(TransactionsRequest)
     
 }
 
@@ -25,13 +26,16 @@ extension NetworkRequest {
     var path: String {
         switch self {
         case .userInfo:
-            "personal/client-info"
+            return "personal/client-info"
+        case let .transactions(request):
+            return "personal/statement/\(request.accountNumber)/\(request.from)/\(request.to)"
         }
     }
     
     var method: Method {
         switch self {
-        case .userInfo:
+        case .userInfo,
+                .transactions:
                 .get
         }
     }
@@ -42,8 +46,10 @@ extension NetworkRequest {
     
     var headers: [String: String] {
         switch self {
-        case .userInfo:
-            ["X-Token": "uW3Ncl6btBTNmKh6coVIgiaNcF5zy5rswSJt_iNjE4FQ"]
+        case .userInfo(let request):
+            return ["X-Token": request.token]
+        case .transactions(let request):
+            return ["X-Token": request.token]
         }
     }
 }
