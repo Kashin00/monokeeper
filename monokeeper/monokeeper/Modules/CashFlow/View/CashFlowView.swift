@@ -20,12 +20,19 @@ struct CashFlowView: View {
                     ForEach(transactions, id: \.transaction.id) {
                         Text($0.transaction.description)
                     }
+                    .frame(maxWidth: .infinity)
                 }
+                
             case .failed:
-                Text("Failed to load data")
+                FailedView {
+                    vm.reload()
+                }
                 
             case .notAvailable:
-                Text("Not available. Please make authorization")
+                NotAvailableView {
+                    vm.saveToken($0)
+                }
+                .padding(20)
             }
         }
         .task {

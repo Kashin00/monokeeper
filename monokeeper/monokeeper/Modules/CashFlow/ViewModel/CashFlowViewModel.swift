@@ -23,6 +23,19 @@ class CashFlowViewModel: @unchecked Sendable {
         await authORFetch()
     }
     
+    func saveToken(_ token: String) {
+        Task {
+            await dependencies.authService.auth(token: token)
+            await loadTransactions()
+        }
+    }
+    
+    func reload() {
+        Task {
+            await loadTransactions()
+        }
+    }
+    
     private func authORFetch() async {
         switch await dependencies.authService.check() {
         case true:
@@ -33,7 +46,7 @@ class CashFlowViewModel: @unchecked Sendable {
     }
     
     private func proposeAuthFlow() {
-        
+        updateState(.notAvailable)
     }
     
     private func loadTransactions() async {

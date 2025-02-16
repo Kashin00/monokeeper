@@ -9,9 +9,13 @@ import Foundation
 
 actor AuthService {
     
-    let keychain = KeychainService()
+    var keychain = KeychainService()
     
     func check() -> Bool {
         keychain[.token] != nil
+    }
+    
+    func auth(token: String) {
+        keychain[.token] = token.data(using: .utf8)
     }
 }
