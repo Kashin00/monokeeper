@@ -8,7 +8,7 @@
 import Foundation
 
 class LocaleTransactionService: TransactionService {
-    func fetch() async throws -> [RawTransaction] {
+    func fetch(accounts: [String], from: Int, to: Int) async throws -> [RawTransaction] {
         []
     }
 }

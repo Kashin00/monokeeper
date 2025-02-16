@@ -30,7 +30,7 @@ struct CashFlowView: View {
                 
             case .notAvailable:
                 NotAvailableView {
-                    vm.saveToken($0)
+                    vm.processToken($0)
                 }
                 .padding(20)
             }

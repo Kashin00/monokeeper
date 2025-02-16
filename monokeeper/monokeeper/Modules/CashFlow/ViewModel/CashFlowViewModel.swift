@@ -23,9 +23,10 @@ class CashFlowViewModel: @unchecked Sendable {
         await authORFetch()
     }
     
-    func saveToken(_ token: String) {
+    func processToken(_ token: String) {
         Task {
             await dependencies.authService.auth(token: token)
+            try await dependencies.userService.load()
             await loadTransactions()
         }
     }

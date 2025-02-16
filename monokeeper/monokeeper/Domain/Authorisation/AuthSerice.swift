@@ -16,6 +16,6 @@ actor AuthService {
     }
     
     func auth(token: String) {
-        keychain[.token] = token.data(using: .utf8)
+        keychain[.token] = token
     }
 }

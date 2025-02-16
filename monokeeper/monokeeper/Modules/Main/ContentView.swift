@@ -9,8 +9,16 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var cashFlowVM = CashFlowViewModel(dependencies: CaseFlowDependencyContainer())
-    @State private var profileVM = ProfileViewModel()
+    let userService: UserService
+    
+    @State private var cashFlowVM: CashFlowViewModel
+    @State private var profileVM: ProfileViewModel
+    
+    init() {
+        userService = UserService()
+        cashFlowVM = CashFlowViewModel(dependencies: CaseFlowDependencyContainer(transactionManager: TransactionManager(userService: userService), userService: userService))
+        profileVM = ProfileViewModel()
+    }
         
     var body: some View {
         TabContainerView()

@@ -12,51 +12,94 @@ struct KeychainService {
     
     enum Key: String {
         case token
-    }
-    
-    subscript(key: Key) -> Data? {
-        get { read(forKey: key.rawValue) }
-        set {
-            if let data = newValue {
-                save(data, forKey: key.rawValue)
-            } else {
-                delete(forKey: key.rawValue)
+        
+        var account: String {
+            switch self {
+            case .token:
+                #if DEBUG
+                return "token_dev"
+                #else
+                return "token"
+                #endif
+            }
+        }
+        
+        var service: String {
+            switch self {
+            case .token:
+                return "com.monokeeper.token"
             }
         }
     }
     
-    private func save(_ data: Data, forKey key: String) {
+    subscript(key: Key) -> String? {
+        get {
+            if let data = read(key: key) {
+                return String(data: data, encoding: .utf8)
+            } else {
+                return nil
+            }
+        }
+        set(newValue) {
+            if let newValue, let item = newValue.data(using: .utf8) {
+                save(key: key, item: item)
+            } else {
+                delete(key: key)
+            }
+        }
+    }
+    
+    private func save(key: Key, item: Data) {
+        if  insert(key: key, data: item) == errSecDuplicateItem {
+            update(key: key, data: item)
+        }
+    }
+    
+    private func read(key: Key) -> Data? {
         let query: [String: Any] = [
+            kSecAttrService as String: key.service,
+            kSecAttrAccount as String: key.account,
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key,
-            kSecValueData as String: data
+            kSecReturnData as String: true
+        ]
+        
+        var result: AnyObject?
+        SecItemCopyMatching(query as CFDictionary, &result)
+        
+        return (result as? Data)
+    }
+    
+    private func delete(key: Key) {
+        let query: [String: Any] = [
+            kSecAttrService as String: key.service,
+            kSecAttrAccount as String: key.account,
+            kSecClass as String: kSecClassGenericPassword,
         ]
         
         SecItemDelete(query as CFDictionary)
-        SecItemAdd(query as CFDictionary, nil)
     }
     
-    private func read(forKey key: String) -> Data? {
+    private func insert(key: Key, data: Data) -> OSStatus {
         let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key,
-            kSecReturnData as String: kCFBooleanTrue!,
-            kSecMatchLimit as String: kSecMatchLimitOne
+            kSecValueData as String: data,
+            kSecAttrAccount as String: key.account,
+            kSecAttrService as String: key.service,
+            kSecClass as String: kSecClassGenericPassword
         ]
-        
-        var dataTypeRef: AnyObject?
-        let status = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
-        
-        guard status == errSecSuccess else { return nil }
-        return dataTypeRef as? Data
+
+        return SecItemAdd(query as CFDictionary, nil)
     }
     
-    func delete(forKey key: String) {
+    private func update(key: Key, data: Data) {
         let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key
+            kSecAttrAccount as String: key.account,
+            kSecAttrService as String: key.service,
+            kSecClass as String: kSecClassGenericPassword
         ]
-        
-        SecItemDelete(query as CFDictionary)
+
+        let attributesToUpdate = [kSecValueData: data]
+
+        SecItemUpdate(query as CFDictionary, attributesToUpdate as CFDictionary)
     }
 }
+

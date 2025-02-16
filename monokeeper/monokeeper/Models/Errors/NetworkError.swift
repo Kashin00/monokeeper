@@ -11,4 +11,5 @@ enum NetworkError: Error {
     case wrongRequest
     case requestFailed
     case invalidResponse(statusCode: Int)
+    case authError
 }

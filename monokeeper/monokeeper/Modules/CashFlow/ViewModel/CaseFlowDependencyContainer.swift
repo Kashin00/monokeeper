@@ -10,9 +10,11 @@ import Foundation
 struct CaseFlowDependencyContainer {
     let authService: AuthService
     let transactionManager: TransactionManager
+    let userService: UserService
     
-    init(authService: AuthService = AuthService(), transactionManager: TransactionManager = TransactionManager()) {
+    init(authService: AuthService = AuthService(), transactionManager: TransactionManager, userService: UserService) {
         self.authService = authService
         self.transactionManager = transactionManager
+        self.userService = userService
     }
 }
