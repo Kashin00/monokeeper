@@ -13,12 +13,14 @@ struct RawTransaction: ManagedObjectConvertible {
     let description: String
     let amount: Int
     let time: Int
+    let accountId: String
     
-    init(id: String, description: String, amount: Int, time: Int) {
+    init(id: String, description: String, amount: Int, time: Int, accountId: String) {
         self.id = id
         self.description = description
         self.amount = amount
         self.time = time
+        self.accountId = accountId
     }
     
     init(dbEntity: TransactionEntity) {
@@ -26,6 +28,7 @@ struct RawTransaction: ManagedObjectConvertible {
         self.description = dbEntity.desc
         self.amount = dbEntity.amount
         self.time = dbEntity.time
+        self.accountId = dbEntity.accountId
     }
     
     func copyPropertiesTo(_ object: TransactionEntity) {
@@ -33,5 +36,6 @@ struct RawTransaction: ManagedObjectConvertible {
         object.desc = self.description
         object.amount = self.amount
         object.time = self.time
+        object.accountId = self.accountId
     }
 }
