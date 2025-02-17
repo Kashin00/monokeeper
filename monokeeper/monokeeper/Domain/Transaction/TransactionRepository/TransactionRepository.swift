@@ -21,16 +21,24 @@ class TransactionRepository {
         self.storageService = storageService
     }
     
-    func load(for user: User) async throws -> [RawTransaction] {
-        // TODO: WORK WITH LOCAL TRANSACTIONS
-        /*
-         - get lates transactions data and load new ones
-         - OR is empty - force remove load for this month
-         */
+    func load() async throws -> [RawTransaction] {
         
-        let remoteTransactions = try await remoteTransactions.fetch(accounts: user.accounts.compactMap(\.id),
-                                                                    from: Int(Date.now.addingTimeInterval(-90000).timeIntervalSince1970),
-                                                                    to: Int(Date.now.timeIntervalSince1970))
+        let accounts: [String] = storageService.fetchAllObjects(AccountEntity.self).compactMap(\.id)
+        
+        guard !accounts.isEmpty else { throw NetworkError.requestFailed }
+        
+        let savedTransactions = try await localTransactions.fetch(accounts: accounts, from: 0, to: 0)
+        
+        let start = savedTransactions.sorted(by: { $0.time < $1.time }).last?.time ?? Int(Date().startOfMonth().timeIntervalSince1970)
+        let finish = Int(Date().endOfMonth().timeIntervalSince1970)
+        
+        let remoteTransactions = try await remoteTransactions.fetch(accounts: accounts,
+                                                                    from: start,
+                                                                    to: finish)
+        
+        storageService.addEntities(remoteTransactions)
+        storageService.saveContext()
+        
         return remoteTransactions
     }
 }
