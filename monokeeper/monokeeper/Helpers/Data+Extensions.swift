@@ -1,3 +1,12 @@
+//
+//  Data+Extensions.swift
+//  monokeeper
+//
+//  Created by Matviy Kashin on 18.02.2025.
+//
+
+import Foundation
+
 extension Date {
     func startOfMonth() -> Date {
         let calendar = Calendar.current
