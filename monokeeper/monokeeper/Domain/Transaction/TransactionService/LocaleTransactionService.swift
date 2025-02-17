@@ -8,7 +8,20 @@
 import Foundation
 
 class LocaleTransactionService: TransactionService {
+    
+    let storage: StorageService
+    
+    init(storage: StorageService = StorageService()) {
+        self.storage = storage
+    }
+    
     func fetch(accounts: [String], from: Int, to: Int) async throws -> [RawTransaction] {
-        []
+        let predicates = accounts.compactMap { NSPredicate(format: "accountId = %@", $0) }
+
+        var compound = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+        
+        return storage.fetchObjectsOf(TransactionEntity.self, predicate: compound).compactMap {
+            RawTransaction(dbEntity: $0)
+        }
     }
 }
