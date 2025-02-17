@@ -8,17 +8,6 @@
 import Foundation
 import CoreData
 
-protocol ManagedObjectConvertible {
-    associatedtype ManagedObjectType: PersistenceEntityType
-    func copyPropertiesTo(_ object: ManagedObjectType)
-    init(dbEntity: ManagedObjectType)
-}
-
-protocol PersistenceEntityType: NSManagedObject {
-    static var entityName: String { get }
-}
-
-
 //class StorageService {
 //
 //    let persistentContainer: NSPersistentContainer
@@ -96,9 +85,7 @@ protocol PersistenceEntityType: NSManagedObject {
 //    }
 //}
 
-import CoreData
-
-final class StorageService {
+final class StorageService: Storage {
 
     private let persistentContainer: NSPersistentContainer
     

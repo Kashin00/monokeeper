@@ -11,11 +11,14 @@ class TransactionRepository {
     
     let localTransactions: TransactionService
     let remoteTransactions: TransactionService
+    let storageService: Storage
     
     init(localTransactions: TransactionService = LocaleTransactionService(),
-         remoteTransactions: TransactionService = RemoteTransactionService()) {
+         remoteTransactions: TransactionService = RemoteTransactionService(),
+         storageService: Storage = StorageService()) {
         self.localTransactions = localTransactions
         self.remoteTransactions = remoteTransactions
+        self.storageService = storageService
     }
     
     func load(for user: User) async throws -> [RawTransaction] {
