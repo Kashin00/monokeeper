@@ -42,7 +42,7 @@ class RemoteTransactionService: TransactionService, @unchecked Sendable {
         }
         
         return response.compactMap {
-            RawTransaction(id: $0.id, description: $0.description, amount: $0.amount)
+            RawTransaction(id: $0.id, description: $0.description, amount: $0.amount, time: $0.time)
         }
     }
 }

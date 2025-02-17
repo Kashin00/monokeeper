@@ -7,8 +7,31 @@
 
 import Foundation
 
-struct RawTransaction {
+struct RawTransaction: ManagedObjectConvertible {
+    
     let id: String
     let description: String
     let amount: Int
+    let time: Int
+    
+    init(id: String, description: String, amount: Int, time: Int) {
+        self.id = id
+        self.description = description
+        self.amount = amount
+        self.time = time
+    }
+    
+    init(dbEntity: TransactionEntity) {
+        self.id = dbEntity.id
+        self.description = dbEntity.desc
+        self.amount = dbEntity.amount
+        self.time = dbEntity.time
+    }
+    
+    func copyPropertiesTo(_ object: TransactionEntity) {
+        object.id = self.id
+        object.desc = self.description
+        object.amount = self.amount
+        object.time = self.time
+    }
 }
