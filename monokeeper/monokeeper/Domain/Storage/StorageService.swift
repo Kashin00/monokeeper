@@ -8,89 +8,11 @@
 import Foundation
 import CoreData
 
-//class StorageService {
-//
-//    let persistentContainer: NSPersistentContainer
-//
-//    init() {
-//        persistentContainer = NSPersistentContainer(name: "monokeeperDB")
-//        persistentContainer.loadPersistentStores { storeDescription, error in
-//            if let error = error {
-//                fatalError("Unresolved error \(error)" )
-//            }
-//        }
-//        privateContext.parent = mainContext
-//    }
-//
-//    var mainContext: NSManagedObjectContext { return persistentContainer.viewContext }
-//    var privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-//
-//    var context: NSManagedObjectContext {
-//        return privateContext
-//   }
-//
-//    // MARK: - Fetch Data
-//    func fetch<T: NSManagedObject>(_ objectType: T.Type) -> [T] {
-//        let entityName = String(describing: objectType)
-//        let fetchRequest = NSFetchRequest<T>(entityName: entityName)
-//
-//        do {
-//            let fetchedObjects = try context.fetch(fetchRequest)
-//            return fetchedObjects
-//        } catch {
-//            print("Failed to fetch \(entityName):", error)
-//            return []
-//        }
-//    }
-//
-//    // MARK: - Insert Data
-//    func insert<T: NSManagedObject>(_ objectType: T.Type) -> T? {
-//        let entityName = String(describing: objectType)
-//        guard let entity = NSEntityDescription.entity(forEntityName: entityName, in: context) else {
-//            print("Failed to create entity \(entityName)")
-//            return nil
-//        }
-//        let object = T(entity: entity, insertInto: context)
-//        return object
-//    }
-//
-//    // MARK: - Delete Data
-//    func delete(_ object: NSManagedObject) {
-//        context.delete(object)
-//        saveContext()
-//    }
-//
-//    // MARK: - Save Context
-//    func saveContext() {
-//        if context.hasChanges {
-//            do {
-//                try context.save()
-//            } catch {
-//                print("Failed to save context:", error)
-//            }
-//        }
-//    }
-//}
-
-//extension StorageService {
-//    func saveTransactions(_ transactions: [RawTransaction]) {
-//        let entities = transactions.compactMap {
-//            let entity = TransactionEntity(context: context)
-//            entity.id = $0.id
-//            return entity
-//        }
-//
-////        insert(entities)
-//        saveContext()
-//    }
-//}
-
 final class StorageService: Storage {
 
     private let persistentContainer: NSPersistentContainer
     
-    var mainContext: NSManagedObjectContext { return persistentContainer.viewContext }
-    var privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+    var privateContext: NSManagedObjectContext
     
     init() {
         persistentContainer = NSPersistentContainer(name: "monokeeperDB")
@@ -99,7 +21,9 @@ final class StorageService: Storage {
                 fatalError("Unresolved error \(error)" )
             }
         }
-        privateContext.parent = mainContext
+        persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
+        privateContext = persistentContainer.newBackgroundContext()
+        privateContext.automaticallyMergesChangesFromParent = true
     }
     
     var context: NSManagedObjectContext {
@@ -107,11 +31,13 @@ final class StorageService: Storage {
     }
     
     func saveContext() {
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                print("Failed to save context:", error)
+        context.performAndWait {
+            if context.hasChanges {
+                do {
+                    try context.save()
+                } catch {
+                    fatalError()
+                }
             }
         }
     }
@@ -130,7 +56,7 @@ final class StorageService: Storage {
             entity.copyPropertiesTo(object)
             objects.append(object)
         }
-        print("ONJECTS: ", objects.count)
+        print("OBJECTS: ", objects.count)
         return objects
     }
     
