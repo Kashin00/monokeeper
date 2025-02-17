@@ -16,6 +16,12 @@ struct User: Codable {
             case id, sendId, maskedPan
         }
         
+        init(id: String, sendId: String, maskedPan: [String]) {
+            self.id = id
+            self.sendId = sendId
+            self.maskedPan = maskedPan
+        }
+        
         init(dbEntity: AccountEntity) {
             self.id = dbEntity.id
             self.sendId = dbEntity.sendId

@@ -22,27 +22,39 @@ class RemoteTransactionService: TransactionService, @unchecked Sendable {
             throw NetworkError.authError
         }
         
-        let response: [TransactionResponse] = try await withThrowingTaskGroup(of: [TransactionResponse].self) { group in
+        let response: [(String, [TransactionResponse])] = try await withThrowingTaskGroup(of: (String, [TransactionResponse]).self) { group in
             
             accounts.forEach { account in
                 group.addTask {
-                    try await self.networkService.request(.transactions(.init(token: token,
+                    let transactions: [TransactionResponse] = try await self.networkService.request(.transactions(.init(token: token,
                                                                          accountNumber: account,
                                                                          from: from,
                                                                          to: to)))
+                    
+                    return (account, transactions)
+                    
                 }
             }
             
-            return try await group
-                .reduce(into: []) { partialResult, relation in
-                    partialResult.append(contentsOf: relation)
-                }
-            
+            return try await group.reduce(into: []) { partialResult, relation in
+                partialResult.append(relation)
+            }
             
         }
         
-        return response.compactMap {
-            RawTransaction(id: $0.id, description: $0.description, amount: $0.amount, time: $0.time)
+        let rawTransactions: [RawTransaction] = response.flatMap { account, transactions in
+            transactions.map { transaction in
+                RawTransaction(
+                    id: transaction.id,
+                    description: transaction.description,
+                    amount: transaction.amount,
+                    time: transaction.time,
+                    accountId: account
+                )
+            }
         }
+        
+        return rawTransactions
+
     }
 }
