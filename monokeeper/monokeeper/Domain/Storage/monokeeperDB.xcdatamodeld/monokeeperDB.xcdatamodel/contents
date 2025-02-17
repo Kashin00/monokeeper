@@ -11,9 +11,4 @@
         <attribute name="id" attributeType="String"/>
         <attribute name="time" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
-    <entity name="UserEntity" representedClassName="UserEntity" syncable="YES">
-        <attribute name="clientId" attributeType="String"/>
-        <attribute name="name" attributeType="String"/>
-        <relationship name="accounts" toMany="YES" deletionRule="Cascade" destinationEntity="AccountEntity"/>
-    </entity>
 </model>
