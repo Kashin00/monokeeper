@@ -18,4 +18,8 @@ actor AuthService {
     func auth(token: String) {
         keychain[.token] = token
     }
+    
+    func logout() {
+        keychain[.token] = nil
+    }
 }
