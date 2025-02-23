@@ -17,12 +17,6 @@ extension TransactionCategoryEntity {
     }
 
     @NSManaged public var name: String
-    
-    convenience init(name: String) {
-        self.init()
-        self.name = name
-    }
-
 }
 
 extension TransactionCategoryEntity : Identifiable {

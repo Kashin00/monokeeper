@@ -29,6 +29,15 @@ struct Transaction: ManagedObjectConvertible {
         self.category = category
     }
     
+    init(transaction: Self, enrich: TransactionEnrich) {
+        self.id = transaction.id
+        self.description = transaction.description
+        self.amount = enrich.amount
+        self.time = transaction.time
+        self.accountId = transaction.accountId
+        self.category = enrich.category
+    }
+    
     init(dbEntity: TransactionEntity) {
         self.id = dbEntity.id
         self.description = dbEntity.desc
@@ -50,10 +59,12 @@ struct Transaction: ManagedObjectConvertible {
         object.time = Int64(self.time)
         object.accountId = self.accountId
         
-        if let category = self.category {
-            object.category = .init(name: category.name)
-        } else {
+        guard let context = object.managedObjectContext else {
             object.category = nil
+            return
         }
+        let categoryEntity = TransactionCategoryEntity(context: context)
+        self.category?.copyPropertiesTo(categoryEntity)
+        object.category = categoryEntity
     }
 }

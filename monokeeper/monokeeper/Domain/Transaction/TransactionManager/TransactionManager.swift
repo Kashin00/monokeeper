@@ -9,9 +9,9 @@ import Foundation
 
 class TransactionManager {
     
-    let transactionRepository: TransactionRepository
-    let transactionEnricher: TransactionEnricher
-    let userService: UserService
+    private let transactionRepository: TransactionRepository
+    private let transactionEnricher: TransactionEnricher
+    private let userService: UserService
     
     init(transactionRepository: TransactionRepository = TransactionRepository(),
          transactionEnricher: TransactionEnricher = TransactionEnricher(),
@@ -23,5 +23,9 @@ class TransactionManager {
     
     func fetch() async throws -> [Transaction] {
         return try await transactionRepository.load()
+    }
+    
+    func enrich(transaction: Transaction, enrich: TransactionEnrich) {
+        transactionEnricher.enrich(transaction, enrich: enrich)
     }
 }
