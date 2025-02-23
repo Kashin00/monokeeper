@@ -17,7 +17,7 @@ struct ContentView: View {
     init() {
         userService = UserService()
         cashFlowVM = CashFlowViewModel(dependencies: CaseFlowDependencyContainer(transactionManager: TransactionManager(userService: userService), userService: userService))
-        profileVM = ProfileViewModel()
+        profileVM = ProfileViewModel(dependencies: ProfileDependencyContainer(authService: AuthService()))
     }
         
     var body: some View {

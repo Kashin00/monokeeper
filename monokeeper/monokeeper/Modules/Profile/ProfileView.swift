@@ -12,10 +12,11 @@ struct ProfileView: View {
     @Environment(ProfileViewModel.self) var vm
     
     var body: some View {
-        Text("Hello, World!")
-            .onAppear {
-                vm.onAppear()
-            }
+        Button {
+            vm.logout()
+        } label: {
+            Text("Log out")
+        }
     }
 }
 
