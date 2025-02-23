@@ -14,11 +14,13 @@ struct TabContainerView: View {
         TabView {
             CashFlowView()
                 .tabItem {
+                    Image(systemName: "newspaper")
                     Text("Cash Flow")
                 }
             
             ProfileView()
                 .tabItem {
+                    Image(systemName: "person")
                     Text("Profile")
                 }
         }
