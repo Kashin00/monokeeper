@@ -2,7 +2,7 @@
 //  TransactionEntity+CoreDataClass.swift
 //  monokeeper
 //
-//  Created by Matviy Kashin on 17.02.2025.
+//  Created by Matviy Kashin on 23.02.2025.
 //
 //
 

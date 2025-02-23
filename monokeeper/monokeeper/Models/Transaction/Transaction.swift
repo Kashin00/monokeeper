@@ -14,13 +14,13 @@ struct Transaction: ManagedObjectConvertible {
     let amount: Int
     let time: Int
     let accountId: String
-    let category: String?
+    let category: TransactionCategory?
     
     var isHandled: Bool {
         category != nil
     }
     
-    init(id: String, description: String, amount: Int, time: Int, accountId: String, category: String?) {
+    init(id: String, description: String, amount: Int, time: Int, accountId: String, category: TransactionCategory?) {
         self.id = id
         self.description = description
         self.amount = amount
@@ -32,18 +32,28 @@ struct Transaction: ManagedObjectConvertible {
     init(dbEntity: TransactionEntity) {
         self.id = dbEntity.id
         self.description = dbEntity.desc
-        self.amount = dbEntity.amount
-        self.time = dbEntity.time
+        self.amount = Int(dbEntity.amount)
+        self.time = Int(dbEntity.time)
         self.accountId = dbEntity.accountId
-        self.category = dbEntity.category
+        
+        if let category = dbEntity.category {
+            self.category = .init(dbEntity: category)
+        } else {
+            self.category = nil
+        }
     }
     
     func copyPropertiesTo(_ object: TransactionEntity) {
         object.id = self.id
         object.desc = self.description
-        object.amount = self.amount
-        object.time = self.time
+        object.amount = Int64(self.amount)
+        object.time = Int64(self.time)
         object.accountId = self.accountId
-        object.category = self.category
+        
+        if let category = self.category {
+            object.category = .init(name: category.name)
+        } else {
+            object.category = nil
+        }
     }
 }
