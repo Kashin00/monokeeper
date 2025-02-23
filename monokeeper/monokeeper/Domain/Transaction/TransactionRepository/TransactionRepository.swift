@@ -28,7 +28,7 @@ class TransactionRepository {
         
         let accounts: [String] = accountService.getAccounts().compactMap(\.id)
         
-        guard !accounts.isEmpty else { throw NetworkError.Data.noAccounts }
+        guard !accounts.isEmpty else { throw NetworkError.User.noAccounts }
         
         let savedTransactions = try await localTransactions.fetch(accounts: accounts, from: 0, to: 0)
         

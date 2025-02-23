@@ -18,6 +18,11 @@ class CashFlowViewModel: @unchecked Sendable {
     }
     
     var state: State = .loading
+    var selectionAccounts: [User.Account] = []
+    
+    var accountSelectionSheetIsPresented: Bool {
+        !selectionAccounts.isEmpty
+    }
     
     func onAppear() async {
         await authORFetch()
@@ -54,8 +59,31 @@ class CashFlowViewModel: @unchecked Sendable {
         do {
             let transactions = try await dependencies.transactionManager.fetch()
             updateState(.available(transactions))
+        } catch let error as NetworkError.User {
+            switch error {
+            case .noAccounts:
+                await chooseAccounts()
+                
+            case .authError:
+                proposeAuthFlow()
+            }
         } catch {
             updateState(.failed)
         }
+    }
+    
+    private func chooseAccounts() async {
+        do {
+            let user = try await dependencies.userService.load()
+            self.selectionAccounts = user.accounts
+        } catch {
+            proposeAuthFlow()
+        }
+    }
+    
+    func selectAccounts(_ accounts: [User.Account]) {
+        dependencies.accountService.saveAccounts(accounts)
+        selectionAccounts = []
+        reload()
     }
 }

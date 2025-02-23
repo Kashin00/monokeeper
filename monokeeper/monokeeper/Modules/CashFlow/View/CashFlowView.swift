@@ -41,5 +41,12 @@ struct CashFlowView: View {
         .task {
             await vm.onAppear()
         }
+        .sheet(isPresented: .init(get: {
+            vm.accountSelectionSheetIsPresented
+        }, set: { _ in
+            
+        })) {
+            AccountsSelectionSheet()
+        }
     }
 }

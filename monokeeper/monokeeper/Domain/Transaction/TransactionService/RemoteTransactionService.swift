@@ -19,7 +19,7 @@ class RemoteTransactionService: TransactionService, @unchecked Sendable {
     
     func fetch(accounts: [String], from: Int, to: Int) async throws -> [Transaction] {
         guard let token = keychainService[.token] else {
-            throw NetworkError.authError
+            throw NetworkError.User.authError
         }
         
         let response: [(String, [TransactionResponse])] = try await withThrowingTaskGroup(of: (String, [TransactionResponse]).self) { group in

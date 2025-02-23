@@ -8,7 +8,7 @@
 import Foundation
 
 struct User: Codable {
-    struct Account: Codable, ManagedObjectConvertible {
+    struct Account: Codable, ManagedObjectConvertible, Identifiable {
         let id, sendId: String
         let maskedPan: [String]
 

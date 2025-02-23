@@ -11,9 +11,9 @@ enum NetworkError: Error {
     case wrongRequest
     case requestFailed
     case invalidResponse(statusCode: Int)
-    case authError
     
-    enum Data: Error {
+    enum User: Error {
         case noAccounts
+        case authError
     }
 }

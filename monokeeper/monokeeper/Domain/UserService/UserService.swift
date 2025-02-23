@@ -25,7 +25,7 @@ actor UserService {
     @discardableResult
     func load() async throws -> User {
         guard let token = keychainService[.token] else {
-            throw NetworkError.authError
+            throw NetworkError.User.authError
         }
         
         let response: User = try await networkService.request(.userInfo(.init(token: token)))
