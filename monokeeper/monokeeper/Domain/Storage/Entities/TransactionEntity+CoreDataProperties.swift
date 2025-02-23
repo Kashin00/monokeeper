@@ -21,6 +21,7 @@ extension TransactionEntity {
     @NSManaged public var amount: Int
     @NSManaged public var time: Int
     @NSManaged public var accountId: String
+    @NSManaged public var category: String?
 
 }
 

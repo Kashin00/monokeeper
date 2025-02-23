@@ -49,7 +49,8 @@ class RemoteTransactionService: TransactionService, @unchecked Sendable {
                     description: transaction.description,
                     amount: transaction.amount,
                     time: transaction.time,
-                    accountId: account
+                    accountId: account,
+                    category: nil
                 )
             }
         }
