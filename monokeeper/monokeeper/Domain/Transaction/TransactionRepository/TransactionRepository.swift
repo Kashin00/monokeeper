@@ -12,18 +12,21 @@ class TransactionRepository {
     let localTransactions: TransactionService
     let remoteTransactions: TransactionService
     let storageService: Storage
+    let accountService: AccountService
     
     init(localTransactions: TransactionService = LocaleTransactionService(),
          remoteTransactions: TransactionService = RemoteTransactionService(),
-         storageService: Storage = StorageService()) {
+         storageService: Storage = StorageService(),
+         accountService: AccountService = AccountService()) {
         self.localTransactions = localTransactions
         self.remoteTransactions = remoteTransactions
         self.storageService = storageService
+        self.accountService = accountService
     }
     
     func load() async throws -> [Transaction] {
         
-        let accounts: [String] = storageService.fetchAllObjects(AccountEntity.self).compactMap(\.id)
+        let accounts: [String] = accountService.getAccounts().compactMap(\.id)
         
         guard !accounts.isEmpty else { throw NetworkError.Data.noAccounts }
         
