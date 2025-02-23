@@ -32,7 +32,14 @@ class TransactionRepository {
         
         let savedTransactions = try await localTransactions.fetch(accounts: accounts, from: 0, to: 0)
         
-        let start = savedTransactions.sorted(by: { $0.time < $1.time }).last?.time ?? Int(Date().startOfMonth().timeIntervalSince1970)
+        var start: Int {
+            guard let startTime = savedTransactions.sorted(by: { $0.time < $1.time }).last?.time else {
+                return Int(Date().startOfMonth().timeIntervalSince1970)
+            }
+            
+            return startTime + 1
+        }
+        
         let finish = Int(Date().endOfMonth().timeIntervalSince1970)
         
         let remoteTransactions = try await remoteTransactions.fetch(accounts: accounts,
