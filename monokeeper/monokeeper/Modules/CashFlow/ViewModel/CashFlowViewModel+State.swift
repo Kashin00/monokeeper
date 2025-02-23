@@ -10,7 +10,7 @@ import Foundation
 extension CashFlowViewModel {
     enum State {
         case loading
-        case available([EnrichedTransaction])
+        case available([Transaction])
         case notAvailable
         case failed
     }

@@ -17,8 +17,8 @@ struct CashFlowView: View {
             switch vm.state {
             case .available(let transactions):
                 ScrollView {
-                    ForEach(transactions, id: \.transaction.id) {
-                        Text($0.transaction.description)
+                    ForEach(transactions, id: \.id) {
+                        Text($0.description)
                     }
                     .frame(maxWidth: .infinity)
                 }

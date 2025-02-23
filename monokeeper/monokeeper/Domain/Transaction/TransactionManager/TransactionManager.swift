@@ -21,8 +21,7 @@ class TransactionManager {
         self.userService = userService
     }
     
-    func fetch() async throws -> [EnrichedTransaction] {
-        let transactions = try await transactionRepository.load()
-        return transactionEnricher.enrich(transactions)
+    func fetch() async throws -> [Transaction] {
+        return try await transactionRepository.load()
     }
 }

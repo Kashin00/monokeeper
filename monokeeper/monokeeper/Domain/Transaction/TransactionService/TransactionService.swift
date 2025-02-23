@@ -8,5 +8,5 @@
 import Foundation
 
 protocol TransactionService {
-    func fetch(accounts: [String], from: Int, to: Int) async throws -> [RawTransaction]
+    func fetch(accounts: [String], from: Int, to: Int) async throws -> [Transaction]
 }

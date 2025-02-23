@@ -15,13 +15,13 @@ class LocaleTransactionService: TransactionService {
         self.storage = storage
     }
     
-    func fetch(accounts: [String], from: Int, to: Int) async throws -> [RawTransaction] {
+    func fetch(accounts: [String], from: Int, to: Int) async throws -> [Transaction] {
         let predicates = accounts.compactMap { NSPredicate(format: "accountId = %@", $0) }
 
-        var compound = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+        let compound = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
         
         return storage.fetchObjectsOf(TransactionEntity.self, predicate: compound).compactMap {
-            RawTransaction(dbEntity: $0)
+            Transaction(dbEntity: $0)
         }
     }
 }

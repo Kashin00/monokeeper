@@ -17,7 +17,7 @@ class RemoteTransactionService: TransactionService, @unchecked Sendable {
         self.keychainService = keychainService
     }
     
-    func fetch(accounts: [String], from: Int, to: Int) async throws -> [RawTransaction] {
+    func fetch(accounts: [String], from: Int, to: Int) async throws -> [Transaction] {
         guard let token = keychainService[.token] else {
             throw NetworkError.authError
         }
@@ -42,9 +42,9 @@ class RemoteTransactionService: TransactionService, @unchecked Sendable {
             
         }
         
-        let rawTransactions: [RawTransaction] = response.flatMap { account, transactions in
+        let transactions: [Transaction] = response.flatMap { account, transactions in
             transactions.map { transaction in
-                RawTransaction(
+                Transaction(
                     id: transaction.id,
                     description: transaction.description,
                     amount: transaction.amount,
@@ -54,7 +54,7 @@ class RemoteTransactionService: TransactionService, @unchecked Sendable {
             }
         }
         
-        return rawTransactions
+        return transactions
 
     }
 }

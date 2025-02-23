@@ -8,10 +8,21 @@
 import Foundation
 
 class TransactionEnricher {
-    func enrich(_ transactions: [RawTransaction]) -> [EnrichedTransaction] {
-        // TODO: ADD ENRICH LOGIC
-        return transactions.compactMap({
-            EnrichedTransaction(transaction: $0, transactionEnrich: nil)
-        })
-    }
+//    func enrich(_ transactions: [RawTransaction]) -> [EnrichedTransaction] {
+//        // TODO: ADD ENRICH LOGIC
+//        return transactions.compactMap({
+//            EnrichedTransaction(transaction: $0, transactionEnrich: nil)
+//        })
+//    }
 }
+
+/*
+ 
+ get local and enrich
+ get remote -> save -> proceed without enrich
+ 
+ 
+ 
+ how to store enriched transactions
+ 
+ */

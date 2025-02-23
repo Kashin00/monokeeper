@@ -1,5 +1,5 @@
 //
-//  RawTransaction.swift
+//  Transaction.swift
 //  monokeeper
 //
 //  Created by Matviy Kashin on 16.02.2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RawTransaction: ManagedObjectConvertible {
+struct Transaction: ManagedObjectConvertible {
     
     let id: String
     let description: String

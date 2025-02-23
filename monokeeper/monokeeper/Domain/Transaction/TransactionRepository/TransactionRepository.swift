@@ -21,11 +21,11 @@ class TransactionRepository {
         self.storageService = storageService
     }
     
-    func load() async throws -> [RawTransaction] {
+    func load() async throws -> [Transaction] {
         
         let accounts: [String] = storageService.fetchAllObjects(AccountEntity.self).compactMap(\.id)
         
-        guard !accounts.isEmpty else { throw NetworkError.requestFailed }
+        guard !accounts.isEmpty else { throw NetworkError.Data.noAccounts }
         
         let savedTransactions = try await localTransactions.fetch(accounts: accounts, from: 0, to: 0)
         
