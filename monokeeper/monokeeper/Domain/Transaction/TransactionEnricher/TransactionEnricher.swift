@@ -18,7 +18,7 @@ class TransactionEnricher {
 
 /*
  
- get local and enrich
+ get local (enriched or not)
  get remote -> save -> proceed without enrich
  
  

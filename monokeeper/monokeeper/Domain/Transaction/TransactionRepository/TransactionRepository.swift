@@ -39,6 +39,6 @@ class TransactionRepository {
         storageService.addEntities(remoteTransactions)
         storageService.saveContext()
         
-        return remoteTransactions
+        return savedTransactions + remoteTransactions
     }
 }
