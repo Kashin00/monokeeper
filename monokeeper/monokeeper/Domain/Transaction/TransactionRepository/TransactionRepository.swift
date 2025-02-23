@@ -49,6 +49,6 @@ class TransactionRepository {
         storageService.addEntities(remoteTransactions)
         storageService.saveContext()
         
-        return savedTransactions + remoteTransactions
+        return savedTransactions.sorted(by: { $0.time > $1.time }) + remoteTransactions.sorted(by: { $0.time > $1.time })
     }
 }
