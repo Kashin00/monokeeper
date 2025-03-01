@@ -59,12 +59,13 @@ struct Transaction: ManagedObjectConvertible {
         object.time = Int64(self.time)
         object.accountId = self.accountId
         
-        guard let context = object.managedObjectContext else {
+        guard let context = object.managedObjectContext,
+        let category else {
             object.category = nil
             return
         }
         let categoryEntity = TransactionCategoryEntity(context: context)
-        self.category?.copyPropertiesTo(categoryEntity)
+        category.copyPropertiesTo(categoryEntity)
         object.category = categoryEntity
     }
 }
