@@ -24,6 +24,7 @@ final class StorageService: Storage {
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
         privateContext = persistentContainer.newBackgroundContext()
         privateContext.automaticallyMergesChangesFromParent = true
+        privateContext.mergePolicy = NSMergePolicy(merge: .mergeByPropertyObjectTrumpMergePolicyType)
     }
     
     var context: NSManagedObjectContext {
