@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountsSelectionSheet: View {
     
-    @Environment(CashFlowViewModel.self) var vm
+    @Binding var vm: CashFlowViewModel
     
     @State private var selection: Set<String> = []
     

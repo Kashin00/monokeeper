@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfileView: View {
     
-    @Environment(ProfileViewModel.self) var vm
+    @Binding var vm: ProfileViewModel
     
     var body: some View {
         Button {
@@ -21,5 +21,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
+//    ProfileView()
 }

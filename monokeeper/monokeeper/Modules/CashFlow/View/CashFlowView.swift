@@ -10,15 +10,19 @@ import SwiftUI
 
 struct CashFlowView: View {
     
-    @Environment(CashFlowViewModel.self) var vm
+    @Binding var vm: CashFlowViewModel
     
     var body: some View {
         VStack {
             switch vm.state {
             case .available(let transactions):
                 ScrollView {
-                    ForEach(transactions, id: \.id) {
-                        Text($0.description)
+                    ForEach(transactions, id: \.id) { transaction in
+                        Text(transaction.description)
+                            .foregroundStyle(transaction.isHandled ? .red : .black)
+                            .onTapGesture {
+                                vm.transactionTap(transaction)
+                            }
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -46,7 +50,12 @@ struct CashFlowView: View {
         }, set: { _ in
             
         })) {
-            AccountsSelectionSheet()
+            AccountsSelectionSheet(vm: $vm)
+        }
+        .sheet(isPresented: $vm.transactionHandlingAvailable) {
+            if let transaction = vm.handlingTransaction {
+                TransactionHandlingView(vm: .init(transaction: transaction))
+            }
         }
     }
 }

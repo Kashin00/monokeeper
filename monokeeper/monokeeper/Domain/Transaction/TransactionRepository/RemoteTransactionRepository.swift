@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RemoteTransactionService: TransactionService, @unchecked Sendable {
+class RemoteTransactionRepository: TransactionRepository, @unchecked Sendable {
     
     let networkService: NetworkService
     let keychainService: KeychainService
@@ -17,19 +17,19 @@ class RemoteTransactionService: TransactionService, @unchecked Sendable {
         self.keychainService = keychainService
     }
     
-    func fetch(accounts: [String], from: Int, to: Int) async throws -> [Transaction] {
+    func fetch(with request: TransactionsFetchRequest) async throws -> [Transaction] {
         guard let token = keychainService[.token] else {
             throw NetworkError.User.authError
         }
         
         let response: [(String, [TransactionResponse])] = try await withThrowingTaskGroup(of: (String, [TransactionResponse]).self) { group in
             
-            accounts.forEach { account in
+            request.accounts.forEach { account in
                 group.addTask {
                     let transactions: [TransactionResponse] = try await self.networkService.request(.transactions(.init(token: token,
                                                                          accountNumber: account,
-                                                                         from: from,
-                                                                         to: to)))
+                                                                                                                        from: request.from,
+                                                                                                                        to: request.to)))
                     
                     return (account, transactions)
                     

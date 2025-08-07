@@ -24,6 +24,10 @@ class CashFlowViewModel: @unchecked Sendable {
         !selectionAccounts.isEmpty
     }
     
+    private(set) var handlingTransaction: Transaction?
+    
+    var transactionHandlingAvailable = false
+    
     func onAppear() async {
         await authORFetch()
     }
@@ -85,5 +89,15 @@ class CashFlowViewModel: @unchecked Sendable {
         dependencies.accountService.saveAccounts(accounts)
         selectionAccounts = []
         reload()
+    }
+    
+    func transactionTap(_ transaction: Transaction) {
+        self.handlingTransaction = transaction
+        transactionHandlingAvailable = true
+    }
+    
+    func enrich(transaction: Transaction, enrich: TransactionEnrich = .init(category: .init(name: "123"), amount: 123)) {
+        self.handlingTransaction = nil
+        dependencies.transactionManager.enrich(transaction: transaction, enrich: enrich)
     }
 }
